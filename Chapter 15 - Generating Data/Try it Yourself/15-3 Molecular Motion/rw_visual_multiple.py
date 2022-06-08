@@ -6,14 +6,16 @@ from random_walk import RandomWalk
 
 while True:
     # Make a random walk
-    rw = RandomWalk(1_000_000)
+    rw = RandomWalk(5_000)
     rw.fill_walk()
 
     # Plot the points in the walk
     plt.style.use('classic')
     fig, ax = plt.subplots(figsize=(10,6), dpi=128)
     point_numbers = range(rw.num_points)
-    ax.scatter(rw.x_values, rw.y_values, c=point_numbers, cmap=plt.cm.Blues, edgecolors='none', s=1)
+
+    # Altered the scatter with plot to simulate the path of a pollen grain on the surface of a drop of water.
+    ax.plot(rw.x_values, rw.y_values, linewidth=1)
 
     # Emphasize the first and last points.
     ax.scatter(0, 0, c='green', edgecolors='none', s=50)
