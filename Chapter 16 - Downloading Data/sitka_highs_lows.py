@@ -23,7 +23,7 @@ with open(filename) as f:
     fig, ax = plt.subplots()
     ax.plot(dates, highs, c='red', alpha=0.6)
     ax.plot(dates, lows, c='blue', alpha=0.5)
-    plt.fill_between(dates, highs, lows, facecolor='blue', lpha=0.1)
+    plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
 
     # Format plot.
     plt.title("Daily high and low temperatures, - 2018", fontsize=24)
