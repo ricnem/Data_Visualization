@@ -13,28 +13,44 @@ with open(filename) as f:
     header_row = next(reader)
 
     print(header_row)
+    date_index = header_row.index('DATE')
+    high_index = header_row.index('TMAX')
+    low_index = header_row.index('TMIN')
+    name_index = header_row.index('NAME')
 
 
     # Get dates, and rainfall amounts from this file.
-    dates, prcps = [], []
+    dates, highs, lows = [], [], []
     for row in reader:
-        current_date = datetime.strptime(row[2], '%Y-%m-%d')
-        dates.append(current_date)
-        prcp = float(row[3])
-        prcps.append(prcp)
+        # Grab the station name, if it's not already set.
+        if not place_name:
+            place_name = row[name_index]
+            print(place_name)
 
-    # Plot the rainfall amounts.
-    plt.style.use('seaborn')
-    fig, ax = plt.subplots()
-    ax.plot(dates, prcps, c='red', alpha=0.6)
-    plt.fill_between(dates, prcps, facecolor='blue', alpha=0.1)
+        current_date = datetime.strptime(row[date_index], '%Y-%m-%d')
+        try:
+            high = int(row[high_index])
+            low = int(row[low_index])
+        except ValueError:
+            print(f"Missing data for {current_date}")
+        else:
+            dates.append(current_date)
+            highs.append(high)
+            lows.append(low)
 
-    # Format plot.
-    plt.title("Sitka Rainfall, - 2018", fontsize=24)
-    plt.xlabel('', fontsize=16)
-    fig.autofmt_xdate()
-    plt.ylabel('Daily rainfall amounts', fontsize=16)
-    plt.tick_params(axis='both', which='major', labelsize=16)
+# Plot the high and low temperatures.
+plt.style.use('seaborn')
+fig, ax = plt.subplots()
+ax.plot(dates, highs, c='red', alpha=0.5)
+ax.plot(dates, lows, c='blue', alpha=0.5)
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
 
-    plt.show()
+# Format plot.
+title = f"Daily high and low temperatures - 2018\n{place_name}"
+plt.title(title, fontsize=20)
+plt.xlabel('', fontsize=16)
+fig.autofmt_xdate()
+plt.ylabel("Temperature (F)", fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=16)
 
+plt.show()
